@@ -21,51 +21,51 @@ template <typename T>
 void test_add_const_ref()
 {
     using TypeMap = boost::mpl::map<
-        boost::mpl::pair<T,                   T const&                     >,
-        boost::mpl::pair<const T,             T const&                     >,
-        boost::mpl::pair<volatile T,          volatile T const&            >,
-        boost::mpl::pair<const volatile T,    volatile T const&            >>;
+        boost::mpl::pair<T,                   T const&                      >,
+        boost::mpl::pair<const T,             T const&                      >,
+        boost::mpl::pair<volatile T,          volatile T const&             >,
+        boost::mpl::pair<const volatile T,    volatile T const&             >>;
     boost::mpl::for_each<TypeMap>(AddConstRef());
 
     using RefMap = boost::mpl::map<
-        boost::mpl::pair<T&,                  T const&                     >,
-        boost::mpl::pair<const T&,            T const&                     >,
-        boost::mpl::pair<volatile T&,         volatile T const&            >,
-        boost::mpl::pair<const volatile T&,   volatile T const&            >>;
+        boost::mpl::pair<T&,                  T const&                      >,
+        boost::mpl::pair<const T&,            T const&                      >,
+        boost::mpl::pair<volatile T&,         volatile T const&             >,
+        boost::mpl::pair<const volatile T&,   volatile T const&             >>;
     boost::mpl::for_each<RefMap>(AddConstRef());
 
     using PointerMap = boost::mpl::map<
-        boost::mpl::pair<T*,                  T* const&                    >,
-        boost::mpl::pair<const T*,            const T* const&              >,
-        boost::mpl::pair<volatile T*,         volatile T* const&           >,
-        boost::mpl::pair<const volatile T*,   const volatile T* const&     >,
-        boost::mpl::pair<T* const,            T* const&                    >,
-        boost::mpl::pair<T* volatile,         T* const volatile&           >,
-        boost::mpl::pair<T* const volatile,   T* const volatile&           >>;
+        boost::mpl::pair<T*,                  T* const&                     >,
+        boost::mpl::pair<const T*,            const T* const&               >,
+        boost::mpl::pair<volatile T*,         volatile T* const&            >,
+        boost::mpl::pair<const volatile T*,   const volatile T* const&      >,
+        boost::mpl::pair<T* const,            T* const&                     >,
+        boost::mpl::pair<T* volatile,         T* const volatile&            >,
+        boost::mpl::pair<T* const volatile,   T* const volatile&            >>;
     boost::mpl::for_each<PointerMap>(AddConstRef());
 
     using ArrayMap = boost::mpl::map<
-        boost::mpl::pair<T[],                 T const (&)[]                >,
-        boost::mpl::pair<const T[],           T const (&)[]                >,
-        boost::mpl::pair<volatile T[],        volatile T const (&)[]       >,
-        boost::mpl::pair<const volatile T[],  volatile T const (&)[]       >>;
+        boost::mpl::pair<T[],                 T const (&)[]                 >,
+        boost::mpl::pair<const T[],           T const (&)[]                 >,
+        boost::mpl::pair<volatile T[],        volatile T const (&)[]        >,
+        boost::mpl::pair<const volatile T[],  volatile T const (&)[]        >>;
     boost::mpl::for_each<ArrayMap>(AddConstRef());
 
     using PointerArrayMap = boost::mpl::map<
-        boost::mpl::pair<T*[],                T* const (&)[]               >,
-        boost::mpl::pair<const T*[],          const T* const (&)[]         >,
-        boost::mpl::pair<volatile T*[],       volatile T* const (&)[]      >,
-        boost::mpl::pair<const volatile T*[], const volatile T* const (&)[]>,
-        boost::mpl::pair<T* const[],          T* const (&)[]               >,
-        boost::mpl::pair<T* volatile[],       T* const volatile (&)[]      >,
-        boost::mpl::pair<T* const volatile[], T* const volatile (&)[]      >>;
+        boost::mpl::pair<T*[],                T* const (&)[]                >,
+        boost::mpl::pair<const T*[],          const T* const (&)[]          >,
+        boost::mpl::pair<volatile T*[],       volatile T* const (&)[]       >,
+        boost::mpl::pair<const volatile T*[], const volatile T* const (&)[] >,
+        boost::mpl::pair<T* const[],          T* const (&)[]                >,
+        boost::mpl::pair<T* volatile[],       T* const volatile (&)[]       >,
+        boost::mpl::pair<T* const volatile[], T* const volatile (&)[]       >>;
     boost::mpl::for_each<PointerArrayMap>(AddConstRef());
 
     using RRefMap = boost::mpl::map<
-        boost::mpl::pair<T&&,                 T const&&                    >,
-        boost::mpl::pair<const T&&,           T const&&>,
-        boost::mpl::pair<volatile T&&,        volatile T const&&>,
-        boost::mpl::pair<const volatile T&&,  volatile T const&&>>;
+        boost::mpl::pair<T&&,                 T const&&                     >,
+        boost::mpl::pair<const T&&,           T const&&                     >,
+        boost::mpl::pair<volatile T&&,        volatile T const&&            >,
+        boost::mpl::pair<const volatile T&&,  volatile T const&&            >>;
     boost::mpl::for_each<RRefMap>(AddConstRef());
 }
 
