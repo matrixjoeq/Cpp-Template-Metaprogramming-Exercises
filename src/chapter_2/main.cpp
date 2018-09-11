@@ -12,8 +12,8 @@ struct AddConstRef
     void operator()(T&)
     {
         using ConstRef = typename add_const_ref<typename T::first>::type;
-        std::cout << typeid(ConstRef).name() << std::endl;
-//        BOOST_STATIC_ASSERT((boost::is_same<ConstRef, typename T::second>::value));
+        //std::cout << typeid(ConstRef).name() << std::endl;
+        BOOST_STATIC_ASSERT((boost::is_same<ConstRef, typename T::second>::value));
     }
 };
 
@@ -21,12 +21,12 @@ template <typename T>
 void test_add_const_ref()
 {
     using TypeMap = boost::mpl::map<
-        boost::mpl::pair<T,                   T const&                     >>;
-//        boost::mpl::pair<const T,             T const&                     >,
-//        boost::mpl::pair<volatile T,          volatile T const&            >,
-//        boost::mpl::pair<const volatile T,    volatile T const&            >>;
+        boost::mpl::pair<T,                   T const&                     >,
+        boost::mpl::pair<const T,             T const&                     >,
+        boost::mpl::pair<volatile T,          volatile T const&            >,
+        boost::mpl::pair<const volatile T,    volatile T const&            >>;
     boost::mpl::for_each<TypeMap>(AddConstRef());
-/*
+
     using RefMap = boost::mpl::map<
         boost::mpl::pair<T&,                  T const&                     >,
         boost::mpl::pair<const T&,            T const&                     >,
@@ -34,7 +34,7 @@ void test_add_const_ref()
         boost::mpl::pair<const volatile T&,   volatile T const&            >>;
     boost::mpl::for_each<RefMap>(AddConstRef());
 
-    using PoTerMap = boost::mpl::map<
+    using PointerMap = boost::mpl::map<
         boost::mpl::pair<T*,                  T* const&                    >,
         boost::mpl::pair<const T*,            const T* const&              >,
         boost::mpl::pair<volatile T*,         volatile T* const&           >,
@@ -42,7 +42,7 @@ void test_add_const_ref()
         boost::mpl::pair<T* const,            T* const&                    >,
         boost::mpl::pair<T* volatile,         T* const volatile&           >,
         boost::mpl::pair<T* const volatile,   T* const volatile&           >>;
-    boost::mpl::for_each<PoTerMap>(AddConstRef());
+    boost::mpl::for_each<PointerMap>(AddConstRef());
 
     using ArrayMap = boost::mpl::map<
         boost::mpl::pair<T[],                 T const (&)[]                >,
@@ -51,7 +51,7 @@ void test_add_const_ref()
         boost::mpl::pair<const volatile T[],  volatile T const (&)[]       >>;
     boost::mpl::for_each<ArrayMap>(AddConstRef());
 
-    using PoTerArrayMap = boost::mpl::map<
+    using PointerArrayMap = boost::mpl::map<
         boost::mpl::pair<T*[],                T* const (&)[]               >,
         boost::mpl::pair<const T*[],          const T* const (&)[]         >,
         boost::mpl::pair<volatile T*[],       volatile T* const (&)[]      >,
@@ -59,14 +59,19 @@ void test_add_const_ref()
         boost::mpl::pair<T* const[],          T* const (&)[]               >,
         boost::mpl::pair<T* volatile[],       T* const volatile (&)[]      >,
         boost::mpl::pair<T* const volatile[], T* const volatile (&)[]      >>;
-    boost::mpl::for_each<PoTerArrayMap>(AddConstRef());
-*/
+    boost::mpl::for_each<PointerArrayMap>(AddConstRef());
+
+    using RRefMap = boost::mpl::map<
+        boost::mpl::pair<T&&,                 T const&&                    >,
+        boost::mpl::pair<const T&&,           T const&&>,
+        boost::mpl::pair<volatile T&&,        volatile T const&&>,
+        boost::mpl::pair<const volatile T&&,  volatile T const&&>>;
+    boost::mpl::for_each<RRefMap>(AddConstRef());
 }
 
 int main()
 {
-    typedef void (*Func)();
-    test_add_const_ref<Func>();
+    test_add_const_ref<int>();
 
     return 0;
 }
