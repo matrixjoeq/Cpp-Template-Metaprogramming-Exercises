@@ -38,6 +38,41 @@ protected:
     using replaced_type = Y;
 };
 
+template <typename C, typename Y>
+struct replace_type_impl<const C, C, Y>
+{
+protected:
+    using replaced_type = const Y;
+};
+
+template <typename C, typename Y>
+struct replace_type_impl<volatile C, C, Y>
+{
+protected:
+    using replaced_type = volatile Y;
+};
+
+template <typename C, typename Y>
+struct replace_type_impl<const volatile C, C, Y>
+{
+protected:
+    using replaced_type = const volatile Y;
+};
+
+template <typename C, typename Y>
+struct replace_type_impl<const volatile C, const C, Y>
+{
+protected:
+    using replaced_type = volatile Y;
+};
+
+template <typename C, typename Y>
+struct replace_type_impl<const volatile C, volatile C, Y>
+{
+protected:
+    using replaced_type = const Y;
+};
+
 template <typename C, typename X, typename Y>
 struct replace_type : replace_type_impl<C, X, Y>
 {

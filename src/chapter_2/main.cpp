@@ -84,24 +84,48 @@ struct ReplaceType
     {
         using OriginType  = typename boost::mpl::at<T, boost::mpl::int_<0>>::type;
         using FindType    = typename boost::mpl::at<T, boost::mpl::int_<1>>::type;
-        using ReplaceType = typename boost::mpl::at<T, boost::mpl::int_<3>>::type;
-        using ExpectType  = typename boost::mpl::at<T, boost::mpl::int_<4>>::type;
+        using ReplaceType = typename boost::mpl::at<T, boost::mpl::int_<2>>::type;
+        using ExpectType  = typename boost::mpl::at<T, boost::mpl::int_<3>>::type;
         using ActualType  = typename replace_type<OriginType, FindType, ReplaceType>::type;
-        std::cout << "replace_type result: " << typeid(ActualType).name() << std::endl;
-        //BOOST_STATIC_ASSERT_MSG((boost::is_same<ActualType, ExpectType>::value), "replace_type does not return expected type");
+        std::cout << "origin type: " << typeid(OriginType).name();
+        std::cout << ", find type: " << typeid(FindType).name();
+        std::cout << ", replace type: " << typeid(ReplaceType).name();
+        std::cout << ", expect type: " << typeid(ExpectType).name();
+        std::cout << ", replace_type result: " << typeid(ActualType).name() << std::endl;
+        BOOST_STATIC_ASSERT_MSG((boost::is_same<ActualType, ExpectType>::value), 
+                                "replace_type does not return expected type");
     }
 };
 
 template <typename U, typename V>
 void test_replace_type()
 {
-    
-    using TL = boost::mpl::vector<
-        boost::mpl::vector<U, U, V, V>,
-        boost::mpl::vector<U*, U, V, V*>,
-        boost::mpl::vector<U&, U, V, V&>,
+    using BasicTypeList = boost::mpl::vector <
+        boost::mpl::vector<U, U, V, V  >,
+        boost::mpl::vector<U, U, V&, V& >,
+        boost::mpl::vector<U, U, V*, V*>,
+        boost::mpl::vector<U, U, V*&, V*&>,
+        boost::mpl::vector<U*, U, V, V* >,
+        boost::mpl::vector<U*, U*, V, V>,
+        boost::mpl::vector<U*, U*, V&, V&>,
+        boost::mpl::vector<U&,  U, V, V& >,
         boost::mpl::vector<U*&, U, V, V*&>>;
-    boost::mpl::for_each<TL>(ReplaceType());
+    boost::mpl::for_each<BasicTypeList>(ReplaceType());
+
+    using QualifiedTypeList = boost::mpl::vector <
+        //                 origin type       find type         replace type      expect type
+        boost::mpl::vector<const U,          U,                V,                const V         >,
+        boost::mpl::vector<volatile U,       U,                V,                volatile V      >,
+        boost::mpl::vector<const volatile U, U,                V,                const volatile V>,
+        boost::mpl::vector<const U,          const U,          V,                V               >,
+        boost::mpl::vector<volatile U,       volatile U,       V,                V               >,
+        boost::mpl::vector<const volatile U, const volatile U, V,                V               >,
+        boost::mpl::vector<const volatile U, const U,          V,                volatile V      >,
+        boost::mpl::vector<const volatile U, volatile U,       V,                const V         >,
+        boost::mpl::vector<U,                U,                const V,          const V         >,
+        boost::mpl::vector<U,                U,                volatile V,       volatile V      >,
+        boost::mpl::vector<U,                U,                const volatile V, const volatile V>>;
+    boost::mpl::for_each<QualifiedTypeList>(ReplaceType());
 }
 
 } // namespace
