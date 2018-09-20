@@ -2,6 +2,10 @@
 # GCC compatible flags
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "QCC")
 
+   #### Protobuf generated code visibility issue
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=default -fvisibility-inlines-hidden")
+   ############################################################################
+
    #### Default compiler flags
    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wpedantic")
    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pedantic-errors")
@@ -51,7 +55,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL Windows)
 endif()
 
 # C++ standard
-set(CMAKE_CXX_STANDARD 11)
+set (CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 ###############################################################################
 
