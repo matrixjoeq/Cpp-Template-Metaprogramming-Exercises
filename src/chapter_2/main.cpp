@@ -10,6 +10,8 @@
 
 #include "add_const_ref.hpp"
 #include "replace_type.hpp"
+#include "polymorphic_downcast.hpp"
+#include "type_descriptor.hpp"
 
 namespace {
 
@@ -258,15 +260,44 @@ void test_replace_type()
     mpl::for_each<FuncTL>(ReplaceType());
 }
 
+struct Base { virtual ~Base() {} };
+struct DerivedOne : Base { int i; };
+struct DerivedTwo : Base { int i[2]; };
+
+void test_polymorphic_downcast()
+{
+    DerivedOne d1;
+    DerivedTwo d2;
+
+    Base* pb1 = &d1;
+    Base* pb2 = &d2;
+    Base& rb1 = d1;
+    Base& rb2 = d2;
+
+    DerivedOne* pd1 = polymorphic_downcast<DerivedOne*>(pb1);
+    (void)pd1;
+    DerivedTwo* pd2 = polymorphic_downcast<DerivedTwo*>(pb2);
+    (void)pd2;
+
+    DerivedOne& rd1 = polymorphic_downcast<DerivedOne&>(rb1);
+    (void)rd1;
+    DerivedTwo& rd2 = polymorphic_downcast<DerivedTwo&>(rb2);
+    (void)rd2;
+}
+
+void test_type_descriptor()
+{
+    std::cout << "type is: " << type_descriptor<char>();
+}
+
 } // namespace
 
 int main()
 {
-    using type = boost::add_pointer<int[1]>::type;
-    BOOST_STATIC_ASSERT((boost::is_same<type, int (*)[1]>::value));
-    std::cout << typeid(type).name() << std::endl;
     test_add_const_ref<int>();
     test_replace_type<int, float>();
+    test_polymorphic_downcast();
+    test_type_descriptor();
 
     return 0;
 }
