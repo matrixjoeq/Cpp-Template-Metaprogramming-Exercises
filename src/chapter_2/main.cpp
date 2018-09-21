@@ -266,6 +266,7 @@ struct DerivedTwo : Base { int i[2]; };
 
 void test_polymorphic_downcast()
 {
+    std::cout << "Exercise 2-2\n";
     DerivedOne d1;
     DerivedTwo d2;
 
@@ -285,18 +286,83 @@ void test_polymorphic_downcast()
     (void)rd2;
 }
 
+struct TypeDescriptor
+{
+    template <typename T>
+    void operator()(T&)
+    {
+        std::cout << "T: "                                      << type_descriptor<T>()                                     << std::endl;
+        std::cout << "T[]: "                                    << type_descriptor<T[]>()                                   << std::endl;
+
+        std::cout << "T(&)[]: "                                 << type_descriptor<T(&)[]>()                                << std::endl;
+        std::cout << "T*: "                                     << type_descriptor<T*>()                                    << std::endl;
+        std::cout << "T*[]: "                                   << type_descriptor<T*[]>()                                  << std::endl;
+        std::cout << "T*(&)[]: "                                << type_descriptor<T*(&)[]>()                               << std::endl;
+        std::cout << "T&: "                                     << type_descriptor<T&>()                                    << std::endl;
+        std::cout << "T*&: "                                    << type_descriptor<T*&>()                                   << std::endl;
+        std::cout << "const T: "                                << type_descriptor<const T>()                               << std::endl;
+        std::cout << "volatile T: "                             << type_descriptor<volatile T>()                            << std::endl;
+        std::cout << "const volatile T: "                       << type_descriptor<const volatile T>()                      << std::endl;
+        std::cout << "const T[]: "                              << type_descriptor<const T[]>()                             << std::endl;
+        std::cout << "volatile T[]: "                           << type_descriptor<volatile T[]>()                          << std::endl;
+        std::cout << "const volatile T[]: "                     << type_descriptor<const volatile T[]>()                    << std::endl;
+        std::cout << "T* const: "                               << type_descriptor<T* const>()                              << std::endl;
+        std::cout << "T* volatile: "                            << type_descriptor<T* volatile>()                           << std::endl;
+        std::cout << "T* const volatile: "                      << type_descriptor<T* const volatile>()                     << std::endl;
+        std::cout << "T* const[]: "                             << type_descriptor<T* const[]>()                            << std::endl;
+        std::cout << "T* volatile[]: "                          << type_descriptor<T* volatile[]>()                         << std::endl;
+        std::cout << "T* const volatile[]: "                    << type_descriptor<T* const volatile[]>()                   << std::endl;
+        std::cout << "const T*: "                               << type_descriptor<const T*>()                              << std::endl;
+        std::cout << "volatile T*: "                            << type_descriptor<volatile T*>()                           << std::endl;
+        std::cout << "const volatile T*: "                      << type_descriptor<const volatile T*>()                     << std::endl;
+        std::cout << "const T*[]: "                             << type_descriptor<const T*[]>()                            << std::endl;
+        std::cout << "volatile T*[]: "                          << type_descriptor<volatile T*[]>()                         << std::endl;
+        std::cout << "const volatile T*[]: "                    << type_descriptor<const volatile T*[]>()                   << std::endl;
+        std::cout << "const T* const: "                         << type_descriptor<const T* const>()                        << std::endl;
+        std::cout << "const T* volatile: "                      << type_descriptor<const T* volatile>()                     << std::endl;
+        std::cout << "const T* const volatile: "                << type_descriptor<const T* const volatile>()               << std::endl;
+        std::cout << "const T* const[]: "                       << type_descriptor<const T* const[]>()                      << std::endl;
+        std::cout << "const T* volatile[]: "                    << type_descriptor<const T* volatile[]>()                   << std::endl;
+        std::cout << "const T* const volatile[]: "              << type_descriptor<const T* const volatile[]>()             << std::endl;
+        std::cout << "volatile T* const: "                      << type_descriptor<volatile T* const>()                     << std::endl;
+        std::cout << "volatile T* volatile: "                   << type_descriptor<volatile T* volatile>()                  << std::endl;
+        std::cout << "volatile T* const volatile: "             << type_descriptor<volatile T* const volatile>()            << std::endl;
+        std::cout << "volatile T* const[]: "                    << type_descriptor<volatile T* const[]>()                   << std::endl;
+        std::cout << "volatile T* volatile[]: "                 << type_descriptor<volatile T* volatile[]>()                << std::endl;
+        std::cout << "volatile T* const volatile[]: "           << type_descriptor<volatile T* const volatile[]>()          << std::endl;
+        std::cout << "const volatile T* const: "                << type_descriptor<const volatile T* const>()               << std::endl;
+        std::cout << "const volatile T* volatile: "             << type_descriptor<const volatile T* volatile>()            << std::endl;
+        std::cout << "const volatile T* const volatile: "       << type_descriptor<const volatile T* const volatile>()      << std::endl;
+        std::cout << "const volatile T* const[]: "              << type_descriptor<const volatile T* const[]>()             << std::endl;
+        std::cout << "const volatile T* volatile[]: "           << type_descriptor<const volatile T* volatile[]>()          << std::endl;
+        std::cout << "const volatile T* const volatile[]: "     << type_descriptor<const volatile T* const volatile[]>()    << std::endl;
+        std::cout << "const T&: "                               << type_descriptor<const T&>()                              << std::endl;
+        std::cout << "volatile T&: "                            << type_descriptor<volatile T&>()                           << std::endl;
+        std::cout << "const volatile T&: "                      << type_descriptor<const volatile T&>()                     << std::endl;
+        std::cout << "const volatile T* const volatile&: "      << type_descriptor<const volatile T* const volatile&>()     << std::endl;
+        std::cout << "const T(&)[]: "                           << type_descriptor<const T(&)[]>()                          << std::endl;
+        std::cout << "volatile T(&)[]: "                        << type_descriptor<volatile T(&)[]>()                       << std::endl;
+        std::cout << "const volatile T(&)[]: "                  << type_descriptor<const volatile T(&)[]>()                 << std::endl;
+        std::cout << "const volatile T* const volatile(&)[]: "  << type_descriptor<const volatile T* const volatile(&)[]>() << std::endl;
+
+        std::cout << "T (): " << type_descriptor<T ()>() << std::endl;
+    }
+};
+
 void test_type_descriptor()
 {
-    std::cout << "type is: " << type_descriptor<char>();
+    std::cout << "Exercise 2-3\n";
+    using TL = mpl::vector<char>; // short, int, long
+    mpl::for_each<TL>(TypeDescriptor());
 }
 
 } // namespace
 
 int main()
 {
-    test_add_const_ref<int>();
-    test_replace_type<int, float>();
-    test_polymorphic_downcast();
+    //test_add_const_ref<int>();
+    //test_replace_type<int, float>();
+    //test_polymorphic_downcast();
     test_type_descriptor();
 
     return 0;
